@@ -228,10 +228,15 @@
     demoApp.factory('userFactory', function ($http) {
         var factory = {};
         var user = {};
-        $http.get('localhost:8080/userService/loginUser/vinay/varma')
+        $http.get('http://127.0.0.1:8080/userService/loginUser/bla/bla')
                 .success(function (data, status, headers, config) {
-                    user.userId = data.userId;
-                    user.userName = data.username;
+                    console.log("success : "+status);
+                    console.log("success user : "+user);
+
+
+                    user.userId = data.response.userId;
+                    user.userName = data.response.username;
+                    console.log("success username :"+user.userName);
                 }).error(function (data, status, headers, config) {
                     user.userId = 1;
                     user.userName = "error";
@@ -239,10 +244,12 @@
         factory.getUserDetails = function () {
             return user;
         };
+
         return factory;
     });
 
     demoApp.controller('SidebarController', function ($scope, userFactory) {
+      //  console.log(userFactory.getUserDetails().userId +"here" +userFactory.getUserDetails());
         $scope.groups = [
             { name:userFactory.getUserDetails().userName, city:userFactory.getUserDetails().userId }
 

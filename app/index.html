@@ -222,40 +222,25 @@
 
 <!-- Angular -->
 <script src="Scripts/angular.js "></script>
+<script src="Scripts/angular-resource.js "></script>
 <!-- inline scripts related to this page -->
 <script>
-    var demoApp = angular.module('frontend', []);
-    demoApp.factory('userFactory', function ($http) {
-        var factory = {};
-        var user = {};
-        $http.get('http://127.0.0.1:8080/userService/loginUser/bla/bla')
-                .success(function (data, status, headers, config) {
-                    console.log("success : "+status);
-                    console.log("success user : "+user);
+    var demoApp = angular.module('frontend', ['ngResource']);
+
+    demoApp.factory("userFactory",function($resource){
+        return $resource("localhost:\\8080/userService/loginUser/vinay/varma",{},{
+        })
+    })
 
 
-                    user.userId = data.response.userId;
-                    user.userName = data.response.username;
-                    console.log("success username :"+user.userName);
-                }).error(function (data, status, headers, config) {
-                    user.userId = 1;
-                    user.userName = "error";
-                });
-        factory.getUserDetails = function () {
-            return user;
-        };
-
-        return factory;
-    });
 
     demoApp.controller('SidebarController', function ($scope, userFactory) {
-      //  console.log(userFactory.getUserDetails().userId +"here" +userFactory.getUserDetails());
-        $scope.groups = [
-            { name:userFactory.getUserDetails().userName, city:userFactory.getUserDetails().userId }
-
-        ];
-
+        var data=userFactory.get();
+        console.log(data.userId +"here" +data);
+        $scope.groups = [];
+        $scope.groups.push({name:data.username});
     });
 </script>
+
 </body>
 </html>
